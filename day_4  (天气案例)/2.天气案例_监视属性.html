@@ -71,8 +71,12 @@
           console.log("ishot被修改了", nweValue, oldValue);
         },
       });
-      // 简写
+      // 简写  此处的this因为是箭头函数 不在指向vue 实例 所以不建议这样写
       // vm.$watch("ishot", (nweValue, oldValue) => {
+      //   console.log("ishot被修改了", nweValue, oldValue);
+      // });
+      // 写成普通函数 this指向vue 实例
+      //  vm.$watch("ishot", function(nweValue, oldValue){
       //   console.log("ishot被修改了", nweValue, oldValue);
       // });
     </script>

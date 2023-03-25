@@ -61,7 +61,7 @@
           // },
           // 当number属性中有n多个属性时 上面方法 就不适用了
           // 这个时候 需要 借助 deep 属性 对其进行 深度监听 即监听number内所有属性的变化
-          // 因为 vue默认是不会帮你对多层级内部属性进行监听
+          // 因为watch默认是不会帮你对多层级内部属性进行监听
           // 真正监视的是 number 的value 也就是 内存地址
           number: {
             handler(nweValue, oldValue) {
