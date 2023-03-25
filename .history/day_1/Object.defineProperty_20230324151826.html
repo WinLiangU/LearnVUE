@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 
+      1.configurable:表示能否通过delete删除属性从而重新定义属性，能否修改属性的特性，或者能否把属性修改为访问器属性，默认值为false。
+
+      2.enumerable：表示能否通过for in循环访问属性，默认值为false
+
+      3.writable：表示能否修改属性的值。默认值为false。
+
+      4.value：包含这个属性的数据值。默认值为undefined. 
+    -->
+
+    <script>
+      let number = 22;
+      let myInfo = {
+        name: "温良",
+        wify: "珊珊",
+      };
+      Object.defineProperty(myInfo, "age", {
+        // value: 18,
+        // enumerable: true, //  value是否可枚举
+        // writable: false, //  value是否可修改
+        // configurable: true  //  value是否可删除
+        get() {
+          console.log("age被读取");
+          return number;
+        },
+      });
+      console.log(myInfo);
+    </script>
+  </body>
+</html>

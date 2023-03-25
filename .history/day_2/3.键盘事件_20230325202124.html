@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue中的数据代理</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <style type="text/css">
+    * {
+      margin: 20px 0;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <!-- 
+        1、Vue中年常用的按键别名
+          回车 => enter
+          删除 => delete
+          退出 => esc
+          空格 => space
+          换行=>space
+          展开=>tap
+          上=>up
+          下=>down
+          左=>left
+          右=>right
+
+        2.Vue未提供别名的按键，可以使用按键原始的key值去绑定，但注意要转为  kebab-case(短横线命名)
+
+        3.系统修饰键健(用法特殊): ctr1、alt、shift、meta(1).配合keyup使用:按下修饰键的同时，
+          再按下其他键随后释放其他键，
+          事件才被触发(2).配合keydown使用: 正常触发事件.
+
+        4.也可以使用keyCode去指定具体的按键 (不推荐)
+
+        5.Vue.config.keyCodes.自定义健名 = 健码，可以去定制按健别名
+       -->
+      <h1>我叫{{name}}</h1>
+      <br />
+       <!-- 抬起键盘反应 -->
+      <input @keyup.ctr1="showModel" type="text" placeholder="按回车键结束打印"></input>
+      <br />
+      <!-- 按下键盘立即反映 -->
+      <input @keydown.ctr1="showModel" type="text" placeholder="按回车键结束打印"></input>
+    </div>
+    <script>
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          name: "温良",
+        },
+        methods: {
+          showModel(e) {
+            console.log(e.keyCode)//键盘的编码值
+            console.log(e.key)//键盘的名称
+              // Control: ctrl键
+              // Alt
+              // Meta: win键
+            // console.log(e.target.innerHTML)
+          },
+
+        },
+      });
+    </script>
+  </body>
+</html>

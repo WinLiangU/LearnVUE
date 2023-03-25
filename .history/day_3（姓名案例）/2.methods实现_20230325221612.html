@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>methods实现</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!-- 
+      data 中数据改变 vue 所管理的模板就会被重新解析 
+      在模板中调用方法 只要数据有改变 就会重新调用方法
+      影响性能 
+     -->
+    <div id="app">
+      姓:<input
+        type="text"
+        placeholder="请输入姓"
+        v-model:value="firstName"
+      /><br />
+      名:<input type="text" placeholder="请输入名" v-model="listName" /><br />
+      姓名：<span>{{userInfo()}}</span><br />
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        name: "vm",
+        el: "#app",
+        // el: document.getElementById("app"), //写法一
+        data: {
+          firstName: "温",
+          listName: "良",
+        },
+        methods: {
+          userInfo() {
+            console.log("33");
+            return this.firstName + "-" + this.listName;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>初始vue</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">{{name}}</div>
+    <script type="text/javascript">
+      const vm = new Vue({
+        name: "vm",
+        // el: "#app",
+        el: document.getElementById(".app"), //写法一
+        data: {
+          name: "hellow",
+        },
+      });
+    </script>
+  </body>
+</html>

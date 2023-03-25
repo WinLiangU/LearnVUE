@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue中的数据代理</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <style type="text/css">
+    * {
+      margin: 20px 0;
+    }
+    .showModel3 {
+      width: 100%;
+      padding: 50px;
+      background-color: yellow;
+    }
+    .showModel3_1 {
+      background-color: red;
+    }
+    .box1 {
+      width: 100%;
+      padding: 10px;
+      background-color: skyblue;
+    }
+    .box2 {
+      background-color: purple;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <!-- 
+          Vue 中事件修饰符
+              1、prevent 阻止默认事件
+              2、once事件只触发一次
+              3、stop: 阻止事件的冒泡
+              4、capture: 使用事件的捕获模式
+              5、self: 只有event.target是当前操作的元素才触发事件
+              6、passive：事件的默认行为立即执行,无需等待事件回调执行完毕
+       -->
+      <h1>我叫{{name}}</h1>
+      <br />
+      <!-- 修饰符一 prevent 阻止默认事件 -->
+      <a href="https://v2.cn.vuejs.org" @click.prevent="showModel1">阻止跳转</a>
+      <br />
+      <br />
+      <!-- 修饰符二 once事件只触发一次 -->
+      <button @click.once="showModel2">只执行一次</button>
+      <br />
+      <br />
+      <!-- 修饰三 stop阻止事件的冒泡 -->
+      <div @click="showModel3" class="showModel3">
+        <div @click.stop="showModel3" class="showModel3_1">按钮</div>
+      </div>
+      <br />
+      <br />
+      <!-- 修饰四 capture: 使用事件的捕获模式 -->
+      <div @click="showModel4" class="box1">
+        div1
+        <div @click.stop="showModel4" class="box2">div2</div>
+      </div>
+      <br />
+      <br />
+    </div>
+    <script>
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          name: "温良",
+        },
+        methods: {
+          showModel1(e) {
+            // e.preventDefault(); //阻止默认的事件 在vue中可以使用prevent修饰符 阻止默认事件
+            alert("我是温良1");
+          },
+          showModel2() {
+            alert("我是温良2");
+          },
+          showModel3(e) {
+            // e.stopPropagation();//阻止事件冒泡
+            alert("我是温良3");
+          },
+          showModel4() {
+            alert("我是温良3");
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

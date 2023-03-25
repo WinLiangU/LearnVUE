@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue中的数据代理</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 
+          Vue 中事件修饰符
+              1、prevent 阻止默认事件
+              2、once事件只触发一次
+              3、methods中配置的函数，不要用箭头函数，否则this的指向就不是vm了
+              4、methods中配置的函数，都是Vue所管理的函授，this的指向都是vm 或组件实例对象
+              5、@click="demo"和@click="demo($envent)"效果一致，但后者可以传参
+       -->
+      <h1>我叫{{name}}</h1>
+      <br />
+      <!-- 修饰符一 prevent 阻止默认事件 -->
+      <a href="https://v2.cn.vuejs.org" @click.prevent="showModel1">Vue</a>
+      <!-- 修饰符二 once事件只触发一次 -->
+      <a href="https://v2.cn.vuejs.org" @click.once="showModel2">Vue</a>
+    </div>
+    <script>
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          name: "温良",
+        },
+        methods: {
+          showModel1(e) {
+            // e.preventDefault(); //阻止默认的事件 在vue中可以使用prevent修饰符 阻止默认事件
+            alert("我是温良");
+          },
+          showModel2() {
+            alert("我是温良");
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

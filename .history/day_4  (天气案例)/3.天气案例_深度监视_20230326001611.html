@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>天气案例</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 
+        Vue 监视居性watch:
+            1.当被监视的属性变化时，回调函数自动调用，进行相关操作2.监视的属性必须存在，才能进行监视!!3.监视的两种写法:
+            (1).new Vue时传入watch配留
+            (2).通过vm.$watch监视
+       -->
+      <!-- 计算属性 -->
+      <h1>今天天气很{{info}}</h1>
+      <br />
+      <button @click="EditHot">改变天气状态</button>
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+
+      const vm = new Vue({
+        name: "vm",
+        el: "#app",
+        // el: document.getElementById("app"), //写法一
+        data: {
+          ishot: true,
+        },
+
+        // watch: {
+        //   ishot: {
+        //     // immediate: true, // 页面初始化 一上来就执行handler函数
+        //     // handler函数在 ishot 被修改时调用
+        //     // 存在两个参数 一个 修改之后的值 一个修改之前的值
+        //     handler(nweValue, oldValue) {
+        //       console.log("ishot被修改了", nweValue, oldValue);
+        //     },
+        //   },
+        //   //除了可以监听data中的 属性 也可以监听 计算属性
+        //   info: {
+        //     // immediate: true, // 页面初始化 一上来就执行handler函数
+        //     // handler函数在 ishot 被修改时调用
+        //     // 存在两个参数 一个 修改之后的值 一个修改之前的值
+        //     handler(nweValue, oldValue) {
+        //       console.log("info被修改了", nweValue, oldValue);
+        //     },
+        //   },
+        // },
+        computed: {
+          info() {
+            return this.ishot ? "凉爽" : "炎热";
+          },
+        },
+        methods: {
+          EditHot() {
+            this.ishot = !this.ishot;
+          },
+        },
+      });
+      // 监视属性写法二
+      vm.$watch("ishot", {
+        immediate: true, // 页面初始化 一上来就执行handler函数
+        // handler函数在 ishot 被修改时调用
+        // 存在两个参数 一个 修改之后的值 一个修改之前的值
+        handler(nweValue, oldValue) {
+          console.log("ishot被修改了", nweValue, oldValue);
+        },
+      });
+      // 简写
+      // vm.$watch("ishot", (nweValue, oldValue) => {
+      //   console.log("ishot被修改了", nweValue, oldValue);
+      // });
+    </script>
+  </body>
+</html>

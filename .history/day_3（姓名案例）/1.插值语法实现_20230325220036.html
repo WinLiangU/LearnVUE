@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>计算属性</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      姓:<input
+        type="text"
+        placeholder="请输入姓"
+        v-model:value="firstName"
+      /><br />
+      名:<input type="text" placeholder="请输入名" v-model="listName" /><br />
+      姓名：
+      <span>{{firstName }}-{{listName}}</span><br />
+      需求一 只显示三个字符串
+      <!-- 实现一 slice方法截取--><br />
+      <span>{{firstName.slice(0,3)}}-{{listName}}</span><br />
+      <!-- 实现一 substring方法截取--><br />
+      <span>{{firstName.substring(0,3)}}-{{listName}}</span><br />
+      <!-- 实现一 过滤函数-->
+      <span>{{firstName| nameKey}}-{{listName}}</span><br />
+      {{firstName.toString()}}
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        name: "vm",
+        el: "#app",
+        // el: document.getElementById("app"), //写法一
+        data: {
+          firstName: "温",
+          listName: "良",
+        },
+        filters: {
+          nameKey(value) {
+            return value.slice(0, 3);
+          },
+        },
+      });
+      // 字符串反转
+      let str = "hello world";
+      //split("")：根据空字符串拆分数组
+      // reverse()：数组反转元素位置
+      // join("")：数组转回字符串,且不带分隔符
+      console.log(str.split("o"));
+      console.log(str.join("o"));
+      let newStr = str.split("o").reverse().join("");
+
+      console.log(newStr);
+    </script>
+  </body>
+</html>
