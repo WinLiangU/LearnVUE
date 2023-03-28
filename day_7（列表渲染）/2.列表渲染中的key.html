@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>列表渲染中的key</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!-- 
+      面试题: react、vue中的key有什么作用? (key的内部原理)
+        1.虚拟DOM中key的作用:key是虚拟DOM对象的标识，当数据发生变化时，Vue会根据[新数据]生成[新的虚拟DOM]随后Vue进行[新虚拟DOM]
+           与[旧虚拟DOM] 的差异比较，比较规则如下:
+        2.对比规则:
+         (1).旧虚拟DOM中找到了与新虚拟DOM相同的key:o.若虚拟DOM中内容没变，直接使用之前的真实DOM!@.若虚拟DOM中内容变了，
+            则生成新的真实DOM，随后替换掉页面中之前的真实DOM.
+          (2).旧虚拟DOM中未找到与新虚拟DOM相同的key创建新的真实DOM，随后渲染到到页面。
+
+        3。用index作为key可能会引发的问题:1。若对数据进行:逆序添加、逆序删除等破坏顺序操作:
+            会产生没有必要的真实DOM更新 ==> 界面效果没问题，但效率低
+
+        2。如果结构中还包含输入类的DOM:会产生错误DOM更新 ==> 界面有问题
+        
+        4.开发中如何选择key?:
+         1.最好使用每条数据的唯一标识作为key，比如id、手机号/身份证号、学号等唯一值。
+         2.如果不存在对数据的逆序添加、逆序删除等破坏顺序操作，仅用于渲染列表用于展示.
+            使用index作为key是没有问题的.
+     -->
+    <div id="app">
+      <div>
+        <button @click="add">添加汪苏泷</button>
+        <button @click="del">删除张杰</button>
+        <!-- key值为下标 或者不写 -->
+        <!-- 删除和添加 都能够看到 会出现 input 输入框内有值 无法和之前对应的问题 -->
+        <ul>
+          <li v-for="(item,index) in list" :key="item.index">
+            {{item.name}} - {{item.age}}
+            <input type="text" />
+          </li>
+        </ul>
+
+        <!-- key值为对象的标识id -->
+        <!-- 删除和添加  不论input 输入框内有值的情况下 和列表数据对应的问题 被解决了  -->
+        <ul>
+          <li v-for="(item,index) in list" :key="item.id">
+            {{item.name}} - {{item.age}}
+            <input type="text" />
+          </li>
+        </ul>
+      </div>
+
+      <!-- key 的原理 -->
+      <!-- 
+        1. 数据到浏览器解析渲染中间有个虚拟dom Vue 会对虚拟dom 增加key 标识
+        2.当数据改变时 虚拟dom 也会跟着改变
+        3、当改变时 新的dom  会和旧的dom 进行对比 
+        4、key 的作用 就是  新的dom节点去和旧的dom节点一一对应
+        5/ 比对内容结果 一样 就用旧的dom节点 不一样 就用的新的dom 节点
+       -->
+      <!-- 这个算法 就是 diff 算法 -->
+      <!-- 所以在key 为下标或者不写时 就会产生 input 节点没有改变时  用的旧的节点  所以也就出现 对饮关系改变 -->
+      <!-- 而在key 为数据的唯一标识时 不论 input 节点改没改变  和对应的数据 哪一个key 的 节点 就在哪一个节点 -->
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          list: [
+            {
+              id: "1",
+              name: "周杰伦",
+              age: "22",
+              occupation: "singer",
+            },
+            {
+              id: "2",
+              name: "张杰",
+              age: "33",
+              occupation: "singer",
+            },
+            {
+              id: "3",
+              name: "毛不易",
+              age: "28",
+              occupation: "singer",
+            },
+            {
+              id: "4",
+              name: "薛之谦",
+              age: "32",
+              occupation: "singer",
+            },
+          ],
+        },
+        methods: {
+          add() {
+            const user = {
+              id: "5",
+              name: "汪苏泷",
+              age: "33",
+              occupation: "singer",
+            };
+            this.list.unshift(user);
+          },
+          del() {
+            this.list.splice(1, 1);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

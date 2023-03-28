@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>计算属性 和 监听属性对比</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!-- 
+      computed和watch之间的区别:
+      1.computed能完成的功能，watch都可以完成。2.watch能完成的功能，computed不一定能完成，例如: watch可以进行异步操作。两个重要的小原则:
+      1.所被Vue管理的函数，最好写成普通函数，这样this的指向才是vm 或 组件实例对象。2.所有不被Vue所管理的函数(定时器的回调函数、ajax的回调函数、Promise的回调函数等)，最好写成箭头函数,
+      这样this的指向才是vm 或 组件实例对象.
+     -->
+    <div id="app">
+      姓:<input type="text" placeholder="请输入姓" v-model="firstName" /><br />
+      名:<input type="text" placeholder="请输入名" v-model="listName" /><br />
+      姓名：<span>{{fullName}}</span>
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        name: "vm",
+        el: "#app",
+        // el: document.getElementById("app"), //写法一
+        data: {
+          firstName: "温",
+          listName: "良",
+          fullName: "温-良",
+        },
+        // 在watch 中可以进行异步操作
+        watch: {
+          firstName(val) {
+            setTimeout(() => {
+              console.log(this);
+              this.fullName = val + "-" + this.listName;
+            }, 1000);
+          },
+          listName(val) {
+            this.fullName = this.firstName + "-" + val;
+          },
+        },
+        // computed: {
+        //   fullName() {
+        //     // return this.firstName + "-" + this.listName;
+        //     // 在计算属性内不可以进行异步操作
+        //     // setTimeout(() => {
+        //     //   //这里的返回值 交给了 外部这个箭头函数
+        //     //   //fullName 并没有返回值的
+        //     //   return this.firstName + "-" + this.listName;
+        //     // }, 1000);
+        //   },
+        // },
+      });
+      // js知识
+
+      // 1 JS 是单线程执行任务
+      // const time1 = (t) => {
+      //   let start = Date.now();
+      //   while (Date.now() - start < t) {
+      //     console.log("t:", t, 3);
+      //   }
+      //   return function () {
+      //     console.log(t + "结束");
+      //     return "结束";
+      //   };
+      // };
+
+      // let timer1 = setTimeout(() => {
+      //   console.log(3);
+      // }, 5 * 1000);
+      // let timer2 = setTimeout(() => {
+      //   console.log(4);
+      // }, 10 * 1000);
+      // console.log(time1(10)());
+      // console.log(1);
+      // time1(20);
+      // console.log(2);
+      // 因为是单线程 所以 最终打印结果  2000结束 结束 1 （这三个是看起来同时打印） 之后打印 2 之后打印3  打印4
+      // 2 setTimeout(fun,titme)
+      // 这个函数 不是 vue 所管理的函数 而是 你在使用时js 引擎帮你调用这个函数
+      // 而这个函数内部的参数一 有两种写法 一种是 普通函数写法 function(){} 一种是箭头函数写法 () = () => {}
+      // 要注意的是 内部的this指向问题
+    </script>
+  </body>
+</html>

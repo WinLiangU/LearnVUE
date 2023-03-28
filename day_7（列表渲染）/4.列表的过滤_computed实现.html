@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>列表的过滤_computed实现</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- 实现模糊搜索 -->
+      <h1>明显列表</h1>
+      <input type="text" v-model="searchKey" placeholder="请输入人名" />
+      <button @click="search(searchKey,1)">恢复</button>
+      <button @click="search(searchKey,2)">年龄正序</button>
+      <button @click="search(searchKey,3)">年龄倒叙</button>
+      <div>
+        <ul>
+          <li v-for="(item,index) in searchLisr" :key="item.id">
+            {{item.name}} - {{item.age}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          searchKey: "",
+          list: [
+            { id: "1", name: "周杰伦", age: "22", occupation: "singer" },
+            {
+              id: "2",
+              name: "张杰",
+              age: "33",
+              occupation: "singer",
+            },
+            {
+              id: "3",
+              name: "毛不易",
+              age: "28",
+              occupation: "singer",
+            },
+            {
+              id: "4",
+              name: "薛之谦",
+              age: "32",
+              occupation: "singer",
+            },
+          ],
+          // searchLisr: [],
+        },
+        computed: {
+          searchLisr() {
+            return this.list.filter((item) => {
+              return item.name.indexOf(this.searchKey) != -1;
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
