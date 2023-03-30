@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue数据更新的一个问题案例</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <button @click="edit">修改下标为0的对象</button>
+      <ol>
+        <li v-for="(item, index) in arr" :key="index">
+          {{item.name }} - {{item.age}}
+        </li>
+      </ol>
+    </div>
+    <script type="text/javascript">
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          arr: [
+            { name: "温良", age: 18, sex: "男" },
+            { name: "陌矣", age: 18, sex: "nv" },
+            { name: "温良", age: 18, sex: "男" },
+          ],
+        },
+        methods: {
+          edit() {
+            // 当点击按钮时 页面没有被刷新
+            // 呈现的数据还是原来的
+            // 这是为什么呢
+            let p = {
+              name: "小新",
+              age: 20,
+              sex: "男",
+            };
+            this.arr[0] = p;
+            // 经过打印控制台输出  我们得到 数组第一项确实时修改了的
+            // 但是 页面为什么没有被刷新呢?
+            console.log(this.arr);
+          },
+        },
+      });
+      // 经过分析vue  会把 data 配置项 加工成 vm 中的 _data
+      // 并对其每一个 属性 不论层级多少 注意 是属性哦 是属性哦 是属性哦
+      // 都加一个 一个set 和get
+      // 我们可以简单的模拟一个 vue 对data 是如何加工的 请看下一个html
+    </script>
+  </body>
+</html>

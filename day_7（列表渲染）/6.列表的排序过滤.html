@@ -60,12 +60,15 @@
               return item.name.indexOf(this.searchKey) != -1;
             });
             // 这里 可以 改变
-            // if (this.sortType == 2) {
-            //   arr.sort((a, b) => a.age - b.age);
-            // } else if (this.sortType == 1) {
-            //   arr.sort((a, b) => b.age - a.age);
-            // }
+            if (this.sortType == 2) {
+              arr.sort((a, b) => a.age - b.age);
+            } else if (this.sortType == 1) {
+              arr.sort((a, b) => b.age - a.age);
+            }
+            return arr;
             // 改变
+            // 改变原因  0 在 基础数据里相当于Boolean值 false  1，2为true
+            // 所以为trur 就是 更改顺序 可以简写如下 利用三元运算
             if (this.sortType) {
               arr.sort((a, b) => {
                 return this.sortType == 2 ? a.age - b.age : b.age - a.age;

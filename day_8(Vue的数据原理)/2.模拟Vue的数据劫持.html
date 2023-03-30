@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>模拟Vue的数据劫持</title>
+  </head>
+  <body>
+    <!-- 这里时间写 -->
+    <script type="text/javascript">
+      // 怎么模拟呢 先模拟简单的对象
+      // 第一步创建相同的data 对象
+      let data = {
+        name: "温良",
+        age: 18,
+      };
+      //  第二步创建一个 Observer构造函数
+      // Observer 有观察者的意思
+      function Observer(obj) {
+        let kets = Object.keys(obj);
+        kets.forEach((item) => {
+          Object.defineProperty(this, item, {
+            get: () => {
+              console.log(`${item}被读取了了`);
+              return obj[item];
+            },
+            set(val) {
+              console.log(`${item}被修改了，解析模板 生成dom`);
+              obj[item] = val;
+            },
+          });
+        });
+      }
+      // 第三步 new Observer
+      let _data = new Observer(data);
+      // 第四步 创建vm 实例
+      let vm = {};
+      vm.data = data = _data;
+    </script>
+  </body>
+</html>
