@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue.$set的使用</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!-- 
+      Vue.set
+        1. 可以在data 内部含有的响应式对象内部 增加一个属性
+        2. 无法在vm 和data 或者_data 根部对象增加一个响应式对象
+     -->
+    <div id="app">
+      <h1>姓名：{{userInfo.name}}</h1>
+      <br />
+      <h1>虚岁：{{userInfo.age.sAge}}</h1>
+      <br />
+      <h1>周岁：{{userInfo.age.sAge}}</h1>
+
+      <!-- 这样写 页面是没有 任何数据滴,但是也不报凑,因为他是一个undefined 
+          但是 如果 你直接在vm 身上用一个不存在的对象 或者方法 就会报错 -->
+      <h1>性别：{{userInfo.sex}}</h1>
+      <!-- ok 我现在有一个需求 就是 不在 data的userInfo对象里增加一个性别sex 属性 -->
+      <button @click="userInfo.sex='男'">添加性别</button>
+      <!--ok 我们这样写好 但是发现页面依旧还是没有 这是为什么呢???  -->
+      <!-- 
+        那打印一下吧 好我们 来到浏览器 输出 vm.userInfo 我们可以看到 name 和age 都有相应的get 和set  
+        而sex 没有 这是为什么呢???
+        这是 因为 增加的这个sex 属性 只是 增加了一个属性 没有经过vue的一个构造器进行加工 给他一个get和set 方法 也就是不能引起
+        视图的更行 也就是说 不是响应式的
+        怎么解决呢!!!
+        原来 vue为解决这一个问题 提供了一个api
+         Vue.set( target, propertyName/index, value )
+         target: 要添加的对象
+         propertyName/index: 添加的属性 或者索引值
+         value: 属性值
+        向响应式对象中添加一个 property，并确保这个新 property 同样是响应式的，且触发视图更新。它必须用于向响应式对象上添加新 property，因为 Vue 无法探测普通的新增 property 
+        这句好什么意思呢????????
+        好接下来我们演示一个问题就明白了
+      -->
+      <!-- 三种写法 -->
+      <button @click="add">添加性别</button>
+      <button @click="$set(userInfo, 'sex', '男')">添加性别</button>
+
+      <hr />
+      <!-- 
+              演示问题 
+              demo: 演示
+              在data 内部添加一个 新的属性 我的妻子 myWify
+              可以发现 控制台报错
+              Avoid adding reactive properties to a Vue instance or its root $data at runtime - declare it upfront in the data option.
+              无法在未定义、空值或原语值:未定义上设置响应属性
+              _data 就是那个data 配置项 前面vue中的数据代理已经演示过
+              同样的 也不能直接在vm 实例上增加这么一个属性
+          -->
+
+      <!-- <button @click="$set(_data, 'myWify', '珊珊')">演示问题</button> -->
+      <button @click="demo">演示问题</button>
+    </div>
+    <script type="text/javascript">
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          userInfo: {
+            name: "温良",
+            age: {
+              rAge: 24,
+              sAge: 23,
+            },
+          },
+        },
+        methods: {
+          add() {
+            // this.$set(this.userInfo, "sex", "男");
+            // 也可以直接写Vue.set()
+            Vue.set(this.userInfo, "sex", "男");
+          },
+          demo() {
+            this.$set(this._data, "sex", "男");
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小案例</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!-- 
+      Vue监视数据的原理:
+        1。vue会监视data中所有层次的数据
+        2。如何监测对象中的数据?
+
+        通过setter实现监视，且要在new Vue时就传入要监测的数据。(1).对象中后追加的属性，vue默认不做响应式处理
+        (2).如需给后添加的属性做响应式，
+           请使用如下API:
+           Vue.set(target，propertyName/index，value) 
+           或
+           vm.$set(target，propertyName/index，value)
+
+        3。如何监测数组中的数据?通过包裹数组更新元素的方法实现，本质就是做了两件事:
+              (1).调用原生对应的方法对数组进行更新。
+
+              (2).重新解析模板，进而更新页面。
+        4.在Vue修改数组中的某个元素一定要用如下方法:
+            1.使用这些API:
+              push()、pop()、shift()、unshift()、splice()、sort()、reverse()
+            2.Vue.set()或 vm.$set()
+              特别注意: Vue.set() 和 vm.$set() 不能给vm 或 vm的根数据对象 添加属性!!!
+     -->
+    <div id="app">
+      <h1>我的信息</h1>
+      <button @click="userInfo.age ++ ">年龄＋1</button><br />
+      <button @click="addSex">增加性别</button><br />
+      <button @click="userInfo.sex  = '女' ">更改性别</button><br />
+      <button @click="addHobby">增加一个开车的爱好</button><br />
+      <button @click="updataHobby">修改第一个爱好为篮球</button><br />
+      <button @click="addFamily">增加我的家人温4</button><br />
+      <button @click="updataFamily">更改温2的年龄为33</button><br />
+      <br />
+      <h1>姓名：{{userInfo.name}}</h1>
+      <br />
+      <h1>年龄：{{userInfo.age}}</h1>
+      <br />
+      <h1 v-if="userInfo.sex">性别：{{userInfo.sex}}</h1>
+      <br />
+      <div>
+        <h1>我的爱好</h1>
+        <ul>
+          <li v-for="(item, index) in userInfo.hobby" :key="index">
+            {{item }}
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h1>我的家人</h1>
+        <ul>
+          <li v-for="(item,index) in userInfo.family" :key="index">
+            {{item.name}} -- {{item.age}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          userInfo: {
+            name: "温良",
+            age: 24,
+            hobby: ["抽烟", "喝酒", "烫头"],
+            family: [
+              { name: "温1", age: 22 },
+              { name: "温2", age: 23 },
+              { name: "温3", age: 24 },
+            ],
+          },
+        },
+        methods: {
+          addSex() {
+            this.$set(this.userInfo, "sex", "男");
+            // Vue.set(this.userInfo, "sex", "男");
+          },
+          addHobby() {
+            this.userInfo.hobby.push("开车");
+          },
+          updataHobby() {
+            this.$set(this.userInfo.hobby, 0, "篮球");
+            // Vue.set(this.userInfo.hobby, 0, "篮球");
+            // this.userInfo.hobby.splice(0, 1, "篮球");
+          },
+          addFamily() {
+            this.userInfo.family.push({ name: "温4", age: 44 });
+          },
+          updataFamily() {
+            this.userInfo.family[1].age = 33;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
