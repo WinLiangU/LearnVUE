@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>引出生命周期</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <style>
+    /* h1 {
+      改变透明度
+      opacity: 0.5;
+    } */
+  </style>
+  <body>
+    <!-- 让h1 在一定时间内的透明度 从100% 变道0 -->
+    <!-- 动态绑定style 让 -->
+    <!-- 需要一个定时器 setInterval-->
+    <div id="app">
+      <!-- <h1 :style="{'opacity': opacity}">我的名字： {{name}}</h1> -->
+      <!-- 简写 -->
+      <h1 :style="{opacity}">我的名字： {{name}}</h1>
+      <!-- 这样写 直接鬼畜 -->
+      <!-- 模板无限次被编译解析渲染  每次都重新开启一个新的定时器 -->
+      <!-- {{change()}} -->
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      // 既然不能通过外部js 或者 模板调用这个change函数 在哪里能调用呢
+      // 之前说过 vue 在接管容器会对容器进行一系列的操作 具体咱先不聊
+      // 那接管容器 就会有些特定的时间 例如 准备vue vue拿到容器生成虚拟dom  把虚拟dom 放到浏览器上 等等这些
+      //  vue 把这些过程称为生命周期 然后vue就给你带来了一些工具 让你在这些过程中进行操作 这些工具称为钩子函数
+
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          name: "陌矣",
+          opacity: 1,
+        },
+        mounted() {
+          // mounted (挂在 )  将虚拟dom 挂在到页面之后执行此 只执行一次
+          this.change();
+        },
+
+        methods: {
+          change() {
+            setInterval(() => {
+              this.opacity -= 0.01;
+              if (this.opacity < 0) {
+                this.opacity = 1;
+              }
+            }, 20);
+          },
+        },
+      });
+      //这样写也不好
+      // window.onload = () => {
+      //   vm.change();
+      // };
+    </script>
+  </body>
+</html>

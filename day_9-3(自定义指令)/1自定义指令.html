@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自定义指令</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>我的名字： {{name}}</h1>
+      <h3>我的年龄{{age}}</h3>
+      <h3>我的年龄*10之后是 <span v-big="age"></span></h3>
+      <h3>我的年龄*10之后是 <span v-My-big="age"></span></h3>
+      <button @click="age+=1">让我的年龄加1</button>
+      <hr />
+
+      <input type="text" v-mbind:value="n" />
+      <input type="text" v-my-mbind:value="n" />
+      <button @click="n+=1">点我n+1</button>
+      <!--  -->
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      // 全局指令 并且演示驼峰 多个单词组成怎么写
+      Vue.directive("MyBig", (el, binding, vnode) => {
+        el.innerText = binding.value * 10;
+      });
+      Vue.directive("my-mbind", {
+        //有分割线必须都小写
+        bind(el, binding, vnode) {
+          el.value = binding.value;
+        },
+        inserted(el, binding, vnode) {
+          el.focus();
+        },
+        update(el, binding, vnode) {
+          el.focus();
+          el.value = binding.value;
+        },
+      });
+      new Vue({
+        el: "#app",
+        data: {
+          name: "陌矣",
+          age: 18,
+          n: 1,
+        },
+        directives: {
+          big(el, binding, vnode) {
+            // console.dir(el); //证明el 就是指令所在的元素
+            // console.log(el instanceof Element); //证明el 就是指令所在的元素
+            el.innerText = binding.value * 10;
+          },
+          // 创建一个类型v-bind 的指令 v-mbind
+          //现在要页面一上来加载就让input框出现焦点
+          // mbind(el, binding, vnode) {
+          //   console.dir(el);
+          //   el.value = binding.value;
+          //   el.focus();
+          //   //此行加入之后没有实现是什么原因呢？？？？
+          //   //问什么点击按钮 就获取了焦点呢 ？？？
+          //   // 我们看一个dome.html
+          //   //看过这一个dome 我相信你可以盲猜这个问题出现在哪里了 就是无非这一行代码el.focus(); 在页面还没渲染前就执行了呗
+          //   //那我们就来研究一下 这个指令在什么时候调用?
+          //   //  1.指令与元素成功绑定时(一上来) 。2.指令所在的模板被重新解析时。
+          //   // 所以不能这样写 成一个函数 而是写成一个对象
+          //   // 这个对象有几个参数
+          // },
+          // 一个指令定义对象可以提供如下几个钩子函数 (均为可选)：
+          // bind：只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
+          // inserted：被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)。
+          // update：所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。但是你可以通过比较更新前后的值来忽略不必要的模板更新 (详细的钩子函数参数见下).
+          mbind: {
+            bind(el, binding, vnode) {
+              //它也有几个参数 和之前一样 它是在第一次调用 我们来验证一下
+              console.log("bind 我被调用了"); //第一次 控制台只打印了这个 在点击按钮 没有打印了
+              el.value = binding.value;
+            },
+            inserted(el, binding, vnode) {
+              //被绑定元素插入父节点时调用
+              el.focus();
+              console.log("inserted 我被调用了"); //第一次 控制台只打印了这个 在点击按钮 没有打印了
+            },
+            update(el, binding, vnode) {
+              el.focus();
+              //它也有几个参数 和 bind 一样 而它是在更新时雕鹰  //第一次 控制台只没有打印了这个 在点击按钮 只打印了这个
+              el.value = binding.value;
+              console.log("update 我被调用了");
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

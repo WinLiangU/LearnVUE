@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>组件的基本使用</title>
+    <script type="text/javascript" src="../../js/vue.js"></script>
+  </head>
+  <style></style>
+  <body>
+    <!-- 
+      一、Vue中使用组件的三大步骤:
+       1定义组件(创建组件)
+       2注册组件
+       3使用组件(写组件标签)
+     二、如何定义一个组件?
+      使用Vue.extend(options)创建，其中options和new Vue(options)时传入的那个options几乎一样，但也有点区别:
+     三、区别如下:
+        1.el不要写，为什么? - 最终所有的组件都要经过一个vm的管理，由vm中的e1决定服务哪个容器。
+        2.data必须写成函数，为什么? 避免组件被复用时，数据存在引用关系。
+        备注:使用template可以配置组件结构。
+        如何注册组件?
+        1.局部注册: 靠new Vue的时候传入components选项
+        2.全局注册:靠Vue.component('组件名’,组件)
+      四、编写组件标签
+          <My-info></My-info>
+     -->
+    <!--  
+      几个注意点:
+        1.关于组件名:
+          个单词组成:
+            第一种写法(首字母小写): hometown
+            第二种写法(首字母大写): Hometown
+        多个单词组成:
+            第一种写法(kebab-case命名): My-info
+            第二种写法(CamelCase命名): MyInfo(需要Vue脚手架支持)
+        备注:
+            (1).组件名尽可能回避HTML中已有的元素名称，例如: h2、H2都不行。
+            (2).可以使用name配置项指定组件在开发者工具中呈现的名字。
+         2.关于组件标签:
+            第一种写法:<My-info></My-info>
+            第二种写法:<My-info/>
+            备注:不用使用脚手架时，<My-info/>会导致后续组件不能渲染
+        3.一个简写方式:
+           const Myinfo = Vue.extend(options) 可简写为: const Myinfo = options
+    -->
+
+    <div id="app">
+      <My-info></My-info>
+      <hr />
+      <Friend-info></Friend-info>
+      <hr />
+      <hometown></hometown>
+      <hr />
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      // Vue身上有个extend 方法 传一个对象
+      //第一步 创建MyInfo组件  //这个对象除了el name 这两个属性  其他的 都和 vm 一样 包括生命周期
+      const MyInfo = Vue.extend({
+        //没有el 配置项
+        // 参数一 组件的名称
+        name: "MyInfo",
+        // 参数二
+        template: `<div>
+               <h1>我的信息</h1>
+              <h2>我的姓名：{{name}}</h2>
+              <h2>我的年龄： {{age}}</h2>
+              <button @click="add">年龄加1</button>
+
+            </div>`,
+        // 参数三 data 和vm一样 但是只能写成一个函数 为什么写成一个函数 给你来个小例子理解一下 验证一下下面的小例子的
+        //通过这个按钮 可以看到 我点击上面的 但是 下面的不影响
+        data() {
+          return {
+            name: "陌矣",
+            age: 18,
+          };
+        },
+        // 参数四 methods
+        methods: {
+          add() {
+            this.age += 1;
+          },
+        },
+      });
+      //创建FriendIngo组件 也可不写extend 方法 因为vue 会默认给你调用extend 怎么验证呢 在vue.js 文件中 搜索extend 中打印log 或者debugger 就好了
+      const FriendInfo = {
+        //没有el 配置项
+        // 参数一 组件的名称
+        name: "FriendInfo",
+        // 参数二
+        template: `<div>
+               <h1>我的朋友信息</h1>
+              <h2>朋友的姓名：{{name}}</h2>
+              <h2>朋友的年龄： {{age}}</h2>
+            </div>`,
+        // 参数三 data 和vm一样 但是只能写成一个函数
+
+        data() {
+          return {
+            name: "温良",
+            age: 18,
+          };
+        },
+      };
+      Vue.component("hometown", {
+        //没有el 配置项
+        name: "hometown",
+        template: `<div>
+               <h1>信息</h1>
+              <h2>我的家乡：{{addres}}</h2>
+            </div>`,
+        data() {
+          return {
+            addres: "中国",
+          };
+        },
+      });
+      // 第二部注册组件
+      new Vue({
+        el: "#app",
+        components: { MyInfo, FriendInfo },
+      });
+    </script>
+    <script>
+      // let a = {
+      //   x: 100,
+      //   y: 200,
+      // };
+      // let b = a;
+      // let c = a;
+      // b.x = 10;
+      // console.log(b); //{"x": 10,"y": 200}
+      // console.log(c); //{"x": 10,"y": 200}
+      //结果打印一样 因为只是改了值但是地址没有变
+      // 把a写成函数
+      // let a = () => {
+      //   return {
+      //     x: 100,
+      //     y: 200,
+      //   };
+      // };
+      // let b = a();
+      // let c = a();
+      // b.x = 10;
+      // console.log(b); //{"x": 10,"y": 200}
+      // console.log(c); //{"x": 100,"y": 200}
+      //结果打印不一样 因为用到a都是给你返回一个新的对象 所以互不影响 这就是上面组件中data 用到函数的原因
+      // 这样做的是可以使得组件能够被重复使用、
+      // 深入一点去学习 深浅拷贝 和 缓存 堆和栈
+    </script>
+  </body>
+</html>

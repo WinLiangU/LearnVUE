@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>分析生命周期</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <style>
+    /* h1 {
+      改变透明度
+      opacity: 0.5;
+    } */
+  </style>
+  <body>
+    <!-- 将要创建调用beforeCreate函数. -->
+    <!-- 让h1 在一定时间内的透明度 从100% 变道0 -->
+    <!-- 动态绑定style 让 -->
+    <!-- 需要一个定时器 setInterval-->
+    <div id="app">
+      <!-- <h1 :style="{'opacity': opacity}">我的名字： {{name}}</h1> -->
+      <!-- 简写 -->
+      <h1 :style="{opacity}">我的名字： {{name}}</h1>
+      <button @click="edit">编辑我的名字</button>
+      <button @click="bye">销毁</button>
+      <!-- 这样写 直接鬼畜 -->
+      <!-- 模板无限次被编译解析渲染  每次都重新开启一个新的定时器 -->
+      <!-- {{change()}} -->
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      // 既然不能通过外部js 或者 模板调用这个change函数 在哪里能调用呢
+      // 之前说过 vue 在接管容器会对容器进行一系列的操作 具体咱先不聊
+      // 那接管容器 就会有些特定的时间 例如 准备vue vue拿到容器生成虚拟dom  把虚拟dom 放到浏览器上 等等这些
+      //  vue 把这些过程称为生命周期 然后vue就给你带来了一些工具 让你在这些过程中进行操作 这些工具称为钩子函数
+      // 这些钩子函数有哪些呢 如下
+
+      const vm = new Vue({
+        el: "#app",
+        // template: `<div>我是{{name}}</div>`, 需注意只能有一个根元素 特殊的 不能使用template作为根元素
+        data: {
+          name: "陌矣",
+          opacity: 1,
+        },
+        //钩子函数如下 都是什么时间执行执行 又能做什么呢
+        //在控制台只打印了前四个 并且只会调用一次 怎么验证
+        //beforeCreate 和之后的 created 等钩子函数中的this不相等 通过打印name 可以看到
+        // 也可以通过debugger调试看到
+        beforeCreate() {
+          // 准备vue
+          console.log(this.name); //undefined
+          console.log("beforeCreate");
+          console.log(this); //此时的this 中没有_data change 方法
+          //也就是说 此时 初始化完成 仅仅是vue 初始化完成
+          // debugger;
+        },
+        created() {
+          //初始化vue中的数据，方法
+          console.log(this.name); //陌矣
+          console.log(this); // 此时可以看到有_data change 方法 之前讲过是vue 帮你做了一层数据代理
+          //也就是说 此时 初始化完成 就是数据代理 完成
+          // debugger;
+        },
+        //从created 到beforeMount 中进行了  判断 vue实例对象中有没有 el 配置项或者是没有el配置项有没有执行vm.$mount() APi
+        // 如股这两个都没有 直接报废 你写的html什么样 在 浏览器就是什么样
+        //然后又进行了判断有没有template 配置项 我们这里没有所以他就把el也就是 id为app 的标签作为template模板
+        //如果有这个配置项就以这个配置项作为模板替换el 所在的标签 是整体哦 借助rende函数进行解析 可以写一下这个配置项看一下
+        // 就是想拿到vue 所接管的容器进行解析生成虚拟dom 存储下来 (vm.$el)
+        // 然后进行
+        beforeMount() {
+          //在这对dom进行的操作都是无效的 验证一下
+          document.getElementsByTagName("h1")[0].innerText = "aaa";
+          console.log(this);
+          console.log("beforeMount");
+          //此处我们可以看到 页面上还是 {{name}} 说明vue所生成虚拟dom还没有被挂在到页面上  再次之前
+          // debugger; //卡住断点可以看到aaa  但是一但放开就是我的名字陌矣 所以在这对dom进行的操作都是无效的
+        },
+        mounted() {
+          //虚拟dom 挂在页面上生成dom 此时页面所呈现的是被vue编译过的dome 也就是拿vm.$el 替换el成功
+          //在这对dom进行的操作是有效的
+          // document.getElementsByTagName("h1")[0].innerText = "有效的";
+          // console.log(this.$el instanceof HTMLElement); //true
+          console.log("mounted");
+        },
+        //在点击按钮 上面的没有被调用 但是 下面这两个被调用了
+        //数据更新
+        beforeUpdate() {
+          // 数据在更新之前调用 但是此时数据是新的但是页面数据还是旧的
+          console.log("新的名字：", this.name); // 可以看到控制台打印是 陌-矣 而页面展示的还是，陌矣
+          //所以在这操作数据都是不行的
+          console.log("beforeUpdate");
+          // debugger;
+        },
+        // 在这两个钩子函数中间 vue 做了一个算法 即使新旧dom的比较 diff 即完成了model -> view 的更新
+        updated() {
+          // 数据更新之后 页面是新的 数据也是新的
+          console.log("update");
+          debugger;
+        },
+        // 这两个调用以目前的知识需要一个特定的api 就是官网上的 vm.$destroy()这个
+        // 到了这个阶段 也不触发页面更新
+        //演示就是bye这个事件
+        beforeDestroy() {
+          //销毁之前 数据 方法都还在 验证一下
+          // 还有也就是data 指令 methods 还在
+          console.log(this.name);
+          // 但是不触发更新了
+          // this.name = 4454; //可以看到没有调用beforeUpdate(),updated()
+          console.log("beforeDestroy");
+        },
+        destroyed() {
+          //销毁死亡
+          //也就是对应 Vue 实例的所有指令都被解绑，所有的事件监听器被移除
+          console.log("destroy");
+        },
+
+        methods: {
+          change() {
+            setInterval(() => {
+              this.opacity -= 0.01;
+              if (this.opacity < 0) {
+                this.opacity = 1;
+              }
+            }, 20);
+          },
+          edit() {
+            this.name = "陌-矣";
+          },
+          bye() {
+            this.$destroy();
+          },
+        },
+      });
+      // vm.$mount("#app"); //等价于el配置项 第39行
+    </script>
+  </body>
+</html>

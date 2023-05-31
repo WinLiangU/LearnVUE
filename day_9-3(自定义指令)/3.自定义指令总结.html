@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自定义指令总结</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!--  
+      自定义指令总结:/
+        一、定义语法:
+          (1).局部指令:
+            new Vue({                                                  new Vue({
+                    directives:{                                            directives:{
+                      指令名:配置对象         或                                  指令名:回调函数
+                    }                                                         }
+                })                                                       })
+          (2).全局指令:Vue.directive(指令名,配置对象) 或Vue.directive(指令名,回调函数)
+        二、配置对象中常用的3个回调:
+              (1).bind: 指令与元素成功绑定时调用。
+              (2).inserted: 指令所在元素被插入页面时调用。
+            (3).update: 指令所在模板结构被重新解析时调用
+        三、 备注:
+          1.指令定义时不加v-,但使用时要加v-;
+          2.指令名如果是多个单词，要使用kebab-case命名方式，不要用camelCase命名.
+          -->
+    <div id="app">
+      <h1>我的名字： {{name}}</h1>
+      <h3>我的年龄{{age}}</h3>
+      <h3>我的年龄*10之后是 <span v-big="age"></span></h3>
+      <h3>我的年龄*10之后是 <span v-My-big="age"></span></h3>
+      <button @click="age+=1">让我的年龄加1</button>
+      <hr />
+
+      <input type="text" v-mbind:value="n" />
+      <input type="text" v-my-mbind:value="n" />
+      <button @click="n+=1">点我n+1</button>
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      // 全局指令 并且演示驼峰 多个单词组成怎么写
+      Vue.directive("MyBig", (el, binding, vnode) => {
+        el.innerText = binding.value * 10;
+      });
+      Vue.directive("my-mbind", {
+        //有分割线必须都小写
+        bind(el, binding, vnode) {
+          el.value = binding.value;
+        },
+        inserted(el, binding, vnode) {
+          el.focus();
+        },
+        update(el, binding, vnode) {
+          el.focus();
+          el.value = binding.value;
+        },
+      });
+
+      new Vue({
+        el: "#app",
+        data: {
+          name: "陌矣",
+          age: 18,
+          n: 1,
+        },
+        directives: {
+          big(el, binding, vnode) {
+            el.innerText = binding.value * 10;
+          },
+          mbind: {
+            bind(el, binding, vnode) {
+              el.value = binding.value;
+            },
+            inserted(el, binding, vnode) {
+              el.focus();
+            },
+            update(el, binding, vnode) {
+              el.focus();
+              el.value = binding.value;
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

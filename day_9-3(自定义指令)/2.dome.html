@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dome</title>
+  </head>
+  <body>
+    <div></div>
+    <button id="btn">点我添加一个输入框input</button>
+    <script>
+      const btn = document.getElementById("btn");
+      btn.onclick = () => {
+        const input = document.createElement("input");
+        //在div中添加
+        // var a = document.getElementsByTagName("div");
+        // a[0].appendChild(input);
+
+        //或者直接添加在body
+        // input.focus(); //在这一行加入 没有获取焦点 这是为什么呢???
+        // 你的 input 元素 还没有在页面上渲染 在vue就是还没挂载到页面上所以无法获取焦点
+        // 当然也不是所有的操作都要在页面渲染之后才能写也就是放在   document.body.appendChild(input);之后写
+        // 例如
+
+        input.style.backgroundColor = "#ddd";
+        input.value = "陌矣";
+        input.onclick = () => {
+          alert(1);
+        };
+        document.body.appendChild(input);
+
+        // 到这里我么就创建好了 演示一下刚刚那个自定义指令获取焦点的方法 我们分别在21行和24行 加入  input.focus();
+        input.focus(); //在这一行加入 就有获取焦点
+        input.parentElement.style.background = "skyblue";
+        //所以有些操作可以渲染前可以 有些操作必须放在渲染后了
+        // 那好回到我们之前的html
+      };
+    </script>
+    <!-- 其他的自己去学习js 对DOM的操作 -->
+    <!-- JS获取DOM元素的八种方法
+    通过ID获取（getElementById）
+    通过name属性（getElementsByName）
+    通过标签名（getElementsByTagName）
+    通过类名（getElementsByClassName）
+    获取html的方法（document.documentElement）
+    获取body的方法（document.body）
+    通过选择器获取一个元素（querySelector）
+    通过选择器获取一组元素（querySelectorAll） -->
+  </body>
+</html>

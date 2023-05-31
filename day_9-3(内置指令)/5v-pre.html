@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-pre</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <style></style>
+  <body>
+    <div id="app">
+      <!--  
+       v-pre指令:
+          1.跳过其所在节点的编译过程。
+          2.可利用它跳过:没有使用指令语法、没有使用插值语法的节点，会加快编译
+        -->
+      <h2 v-pre>我的名字{{name}}</h2>
+      <h2>我的名字{{name}}</h2>
+      <h2 v-pre v-html="age">没有被解析</h2>
+      <h2 v-html="age"></h2>
+    </div>
+
+    <script type="text/javascript">
+      Vue.config.productionTip = false;
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          name: "陌矣",
+          age: "<span>我的年龄18</span>",
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>模板语法</title>
+    <!-- 引入vue.js -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+  </head>
+  <body>
+    <!-- 
+      1.插值语法:
+        功能:用于解析标签体内容。
+          写法:{[{xxx}}，xxx是js表达式，且可以直接读取到data中的所有属性。
+      2.指今语法.
+        功能:用于解析标签包括: 标签属性、标签体内容、绑定事件.....)。
+              举例: v-bind;href="xxx”或 简写为 :href="xxx"，xxx同样要写js表达式
+          且可以直接读取到data中的所有属性。
+            备注: Vue中有很多的指令，且形式都是: v-????，此处我们只是拿v-bind举个例子。
+     -->
+    <div id="app">
+      <!-- 插值语法 -->
+      <h3>{{name}}</h3>
+      <!-- 指令语法 -->
+      <hr />
+      <!-- toUpperCase() 方法将字符串小写字符转换为大写。 -->
+      <a v-bind:href="url.toUpperCase()" x="hello">点我去学习{{title}}</a>
+      <a :href="url" x="hello">点我去学习2</a>
+    </div>
+    <script type="text/javascript">
+      Vue.config.productionTip = false; //设置为 false 以阻止 vue 在启动时生成生产提示。
+      const vm = new Vue({
+        name: "vm",
+        el: "#app",
+        data: {
+          name: "陌矣",
+          hello: "hello",
+          title: "Vue",
+          url: "https://cn.vuejs.org/",
+        },
+      });
+    </script>
+  </body>
+</html>
